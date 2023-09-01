@@ -167,13 +167,15 @@ def download_video(video_id, download_path, resolution: int=None, video_format="
         stderr = open(log_file, "a")
     video_selection = f"bestvideo[ext={video_format}]"
     video_selection = video_selection if resolution is None else f"{video_selection}[height={resolution}]"
+    video_selection = video_selection + "+ba[ext=m4a]"
     command = [
-        "youtube-dl",
-        "https://youtube.com/watch?v={}".format(video_id), "--quiet", "-f",
+        "yt-dlp",
+        "https://youtube.com/watch?v={}".format(video_id), "-f",
         video_selection,
         "--output", download_path,
         "--no-continue"
     ]
+    print('command: ', ' '.join(command))
     return_code = subprocess.call(command, stderr=stderr)
     success = return_code == 0
 
